@@ -6,37 +6,40 @@ import { config } from '@/utils/config';
 import { useDispatch } from 'react-redux';
 import { logout } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
-
+import { toast } from 'react-toastify';
+import InviteSection from './InviteSection';
+ 
 function GlobalStats() {
   const isUserLoggedIn = useSelector((state: RootState) => state.auth.isUserLoggedIn);
   const user = useSelector((state: RootState) => state.auth.user);
+  const globalData = useSelector((state: RootState) => state.globalData.globalData);
   console.log({user})
 
   const baseUrl = config.baseUrl; 
-  const refUrl = `${baseUrl}/auth/${user?.uid}`;
+  const refUrl = `${baseUrl}/join/${user?.uid}`;
 
   console.log({refUrl})
   const statsData = [
     {
       title: 'Total Users',
-      value: '100,000',
+      value: globalData?.totalUsers,
       icon: 'fa fa-users'
     },
     {
-      title: 'Total Users',
-      value: '100,000',
-      icon: 'fa fa-users'
+      title: 'Total Packs',
+      value: globalData?.totalPacks,
+      icon: 'fa fa-check-circle'
     },
     {
-      title: 'Total Users',
-      value: '100,000',
-      icon: 'fa fa-users'
+      title: 'Points Mined',
+      value: globalData?.totalMines,
+      icon: 'fa fa-usd'
     }
   ]  
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(refUrl).then(() => {
-      alert('Referral URL copied to clipboard!');
+      toast.success('Your Invite Link copied to clipboard!');
     });
   };
 
@@ -57,17 +60,20 @@ function GlobalStats() {
   return (
         <div className="stat-container ">
             <div className="df ac jc mb30">
-                <LogoWord firstWord="VAULT" secondWord="STATS" />
+                <LogoWord firstWord="GLOBAL" secondWord="STATS" />
             </div>
             {/* Stats */}
             {statsData.map((data, index) => (
                 <div className="rectangle-box mb30" key={index}>
-                    <div className="col-md-10 content-col dg ac jc">
+                  
+                    <div className="col-md-10 content-col dg ac pl30">
                         {/* Content goes here */}
+                        
+                        
                         <div className="row fs30 fw800 c-white">
-                        {data.value}
+                        {data.value > 9000 ? data.value.toLocaleString() : data.value}
                         </div>
-                        <div className="row c-gray fs20">
+                        <div className="row c-gray fs20 ">
                         {data.title}
                         </div>
                     </div>
@@ -77,13 +83,20 @@ function GlobalStats() {
                 </div>
             ))} 
 
-          <div className="invite-section">
+          {/* <div className="invite-section">
             <h2>Invite Section</h2>
             <input type="hidden" value={refUrl} readOnly className="ref-url" />
             <button onClick={copyToClipboard} className="copy-button">Copy Invite Link</button>
             <button onClick={shareOnWhatsApp} className="whatsapp-button">Invite on WhatsApp</button>
             <button onClick={handleLogout} className="copy-button bc-orange c-black">Logout</button>
-          </div>
+          </div> */}
+
+      <InviteSection
+        refUrl={refUrl}
+        copyToClipboard={copyToClipboard}
+        shareOnWhatsApp={shareOnWhatsApp}
+        handleLogout={handleLogout}
+      />
         </div>
   )
 }

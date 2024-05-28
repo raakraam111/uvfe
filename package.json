@@ -9,13 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@reduxjs/toolkit": "^2.2.3",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "ethereum-blockies": "^0.1.1",
     "ethers": "^6.12.1",
     "font-awesome": "^4.7.0",
     "next": "14.2.3",
     "react": "^18",
+    "react-blockies": "^1.4.1",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
@@ -26,6 +31,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-blockies": "^1.4.4",
     "@types/react-dom": "^18",
     "dotenv": "^16.4.5",
     "eslint": "^8",

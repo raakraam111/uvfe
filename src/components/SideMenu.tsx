@@ -1,65 +1,3 @@
-// // SideMenu.tsx
-
-// import Link from 'next/link';
-// import { usePathname, useRouter } from 'next/navigation';
-// import { useDispatch } from 'react-redux';
-// import { logout } from '@/store/slices/authSlice';
-
-// export default function SideMenu() {
-//   const dispatch = useDispatch();
-//   const router = useRouter();
-//   const pathname = usePathname();
-//   let path = pathname.split("/");
-//   let active = '/' + path[1];
-
-//   let menuData = [
-//     {
-//       path: '/dashboard',
-//       icon: 'fa fa-home mb--20'
-//     },
-//     {
-//       path: '/deposits',
-//       icon: 'fa fa-arrow-down mb--20'
-//     },
-//     {
-//       path: '/withdrawals',
-//       icon: 'fa fa-arrow-up mb--20'
-//     },
-//     {
-//       path: '/settings',
-//       icon: 'fa fa-cog mb--20'
-//     },
-//     {
-//       path: '/auth',
-//       icon: 'fa fa-power-off mb--20'
-//     }
-//   ];
-
-//   const isActive = (path) => active === path;
-
-//   const handleLogout = () => {
-//     dispatch(logout()); // Dispatch logout action
-//     router.push('/auth'); // Redirect to the auth page
-//   };
-
-//   return (
-//     <div className="icon-column col-md-1">
-//       <div className="icon-navigation">
-//         {menuData.map((menu, index) => (
-//           <div key={index} onClick={menu.path === '/auth' ? handleLogout : null}>
-//             <Link href={menu.path}>
-//               <div className={`icon-holder ${isActive(menu.path) ? 'active' : ''}`}>
-//                 <i className={menu.icon}></i>
-//               </div>
-//             </Link>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-
 // SideMenu.tsx
 import { useState } from 'react';
 import Link from 'next/link';
@@ -163,3 +101,6 @@ export default function SideMenu() {
       </> 
     );
 }
+
+
+ 

@@ -20,3 +20,22 @@ export const packDetails = [
         description: "Maxi Pack",
     } 
 ];
+
+export const pricing = [
+     
+    {
+      "id": "1",
+      "title": "Mini",
+      "description": "50 rolls per pack",
+      "price": "0.99",
+       
+    },
+    {
+      "id": "2",
+      "title": "Maxi",
+      "description": "10 rolls per day",
+      "price": "2.99",
+       
+    }
+  ]
+  ;

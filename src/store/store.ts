@@ -1,27 +1,27 @@
-// // store.ts
-// import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from './slices/authSlice';
-
-// export const store = configureStore({
-//   reducer: {
-//     auth: authReducer,
-//   },
-// });
-
-// export type RootState = ReturnType<typeof store.getState>;
-// export type AppDispatch = typeof store.dispatch;
-
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
+import globalReducer from './slices/globalSlice';
 
-// Function to load the state from localStorage
-function loadFromLocalStorage() {
+// Function to load the state from localStorage for auth
+function loadAuthFromLocalStorage() {
   try {
     const serializedState = localStorage.getItem('auth');
     if (serializedState === null) return undefined;
     return JSON.parse(serializedState);
   } catch (e) {
-    console.error("Could not load state", e);
+    console.error("Could not load auth state", e);
+    return undefined;
+  }
+}
+
+// Function to load the state from localStorage for globalData
+function loadGlobalFromLocalStorage() {
+  try {
+    const serializedState = localStorage.getItem('global');
+    if (serializedState === null) return undefined;
+    return JSON.parse(serializedState);
+  } catch (e) {
+    console.error("Could not load global data state", e);
     return undefined;
   }
 }
@@ -29,9 +29,11 @@ function loadFromLocalStorage() {
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    globalData: globalReducer,
   },
   preloadedState: {
-    auth: loadFromLocalStorage(),
+    auth: loadAuthFromLocalStorage(),
+    globalData: loadGlobalFromLocalStorage(),
   },
 });
 

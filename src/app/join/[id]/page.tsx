@@ -212,8 +212,9 @@ export default function JoinPage() {
           }
         }
       } catch (error) {
+        const e = error as { code?: string }; // Assuming error will always have a 'code' or be undefined
         console.error('Error during login process:', error);
-        if (error.code === 'ACTION_REJECTED') {
+        if (e.code === 'ACTION_REJECTED') {
           toast.error('Login request was rejected.');
         } else {
           toast.error('Error during login process.');

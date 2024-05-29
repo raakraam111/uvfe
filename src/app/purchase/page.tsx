@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { ethers } from "ethers";
 import { config } from "@/utils/config";
@@ -12,25 +12,31 @@ import { logout } from "@/store/slices/authSlice";
 import { toast } from "react-toastify";
 import { packDetails, pricing } from "@/constants";
 import NewHeader from "@/components/NewHeader";
-import { PackPurchaseRequest, DepositRequest } from '@/types/requests';
+import { PackPurchaseRequest, DepositRequest } from "@/types/requests";
 
 function Purchase() {
   const router = useRouter();
   const [packs, setPacks] = useState(packDetails);
   const [minQ, setMinQ] = useState(0);
   const [maxQ, setMaxQ] = useState(0);
-  const [depositAddress, setDepositAddress] = useState("0xee7F9d4af4Ce44b609b88E45D04F0564a5e229c3");
-  const [bnbPrice, setBnbPrice] = useState(600);
-  console.log(packs);
-  const [selectedNetwork, setSelectedNetwork] = useState("ethereum");
-  const isUserLoggedIn = useSelector(
-    (state: RootState) => state.auth.isUserLoggedIn
-  );
-  const user = useSelector((state: RootState) => state.auth.user);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const [mounted, setMounted] = useState(false);
 
+  const [depositAddress, setDepositAddress] = useState(
+    "0xee7F9d4af4Ce44b609b88E45D04F0564a5e229c3"
+  );
+  const [bnbPrice, setBnbPrice] = useState(600);
+  // console.log(packs);
+  const [selectedNetwork, setSelectedNetwork] = useState("ethereum");
+  let isUserLoggedIn;
+  let user;
+  let token;
   useEffect(() => {
-    if (!isUserLoggedIn || !user) {
+    isUserLoggedIn = useSelector(
+      (state: RootState) => state.auth.isUserLoggedIn
+    );
+      user = useSelector((state: RootState) => state.auth.user);
+      token = useSelector((state: RootState) => state.auth.token);
+     if (!isUserLoggedIn || !user) {
       console.log(
         "User not logged in or user data not available, redirecting..."
       );
@@ -76,15 +82,15 @@ function Purchase() {
   useEffect(() => {
     fetchBnbPrice(); // Initial fetch when component mounts
     const intervalId = setInterval(fetchBnbPrice, 6000); // Set up an interval to fetch price every minute
-
+    setMounted(false);
     return () => clearInterval(intervalId); // Clear interval on component unmount
   }, []);
 
-  const handleNetworkChange = (e) => {
+  const handleNetworkChange = (e: any) => {
     setSelectedNetwork(e.target.value);
   };
 
-  const handlePurchase = async (bnbVal, usdVal, packId) => {
+  const handlePurchase = async (bnbVal: any, usdVal: any, packId: any) => {
     toast.info("Processing transaction...");
     const headerConfig = {
       headers: {
@@ -121,7 +127,7 @@ function Purchase() {
       };
 
       const tx = await signer.sendTransaction(transactionParameters);
-      await tx.wait(3); 
+      await tx.wait(3);
       // create pack purchase request
       const packName = packId === "1" ? "mini" : "maxi";
       const qty = packId === "1" ? minQ : maxQ;
@@ -132,7 +138,7 @@ function Purchase() {
         status: "active",
         lastUpdatedUid: user?.uid,
       };
-      
+
       // create deposit request
       const depositRequest: DepositRequest = {
         uid: user?.uid,
@@ -158,11 +164,13 @@ function Purchase() {
         headerConfig
       );
 
-      toast.info(  `Purchase successful!  `);
+      toast.info(`Purchase successful!  `);
     } catch (error) {
-      console.error(error.code);
+      const e = error as { code?: string }; // Assuming error will always have a 'code' or be undefined
 
-      if (error.code === "ACTION_REJECTED") {
+      console.error(e.code);
+
+      if (e.code === "ACTION_REJECTED") {
         toast.error("Transaction rejected by user: Please try again");
       } else {
         toast.error("Transaction failed: Please try later");
@@ -173,13 +181,17 @@ function Purchase() {
   const additional = [1, 5, 20, 50, 100, 0];
 
   function handleMinChange(event: ChangeEvent<HTMLInputElement>): void {
-    setMinQ(parseInt(event.target.value));
-    setMinQ(isNaN(event.target.value) ? 0 : event.target.value); // This will ensure that empty or non-numeric inputs set quantity to 0
+    // Convert the input value to a number first
+    const value = parseInt(event.target.value);
+    // If the value is not a valid number (NaN), set state to 0; otherwise, set it to the parsed number
+    setMinQ(isNaN(value) ? 0 : value);
   }
 
   function handleMaxChange(event: ChangeEvent<HTMLInputElement>): void {
-    setMaxQ(parseInt(event.target.value));
-    setMaxQ(isNaN(event.target.value) ? 0 : event.target.value); // This will ensure that empty or non-numeric inputs set quantity to 0
+    // Convert the input value to a number first
+    const value = parseInt(event.target.value);
+    // If the value is not a valid number (NaN), set state to 0; otherwise, set it to the parsed number
+    setMaxQ(isNaN(value) ? 0 : value);
   }
 
   function incrementQuantity(packType: string, amount: number): void {
@@ -205,24 +217,27 @@ function Purchase() {
             <LogoWord firstWord="MORE WITH" secondWord="UPGRADES" />
           </div>{" "}
           <div className="flex flex-col-reverse lg:flex lg:flex-row-reverse lg:place-content-evenly">
-            {pricing.map((item) => (
+            {pricing.map((item: any) => (
               <div
                 key={item.id}
                 className="w-[22rem] max-lg:w-full h-full px-6 bg-n-8 border border-n-6 rounded-[2rem]  py-10 my-4 lg:p-10 lg:m-10 "
               >
-              <h4 className="h4 mb-4 font-bold" style={{ color: item.id === "1" ? "#FF5733" : "#33C3F0" }}>
-                    {item.title}
-              </h4>
+                <h4
+                  className="h4 mb-4 font-bold"
+                  style={{ color: item.id === "1" ? "#FF5733" : "#33C3F0" }}
+                >
+                  {item.title}
+                </h4>
                 <p className="body-2 min-h-[4rem] mb-3 text-n-1/50">
                   {item.description}
                 </p>
 
                 <div className="flex items-center h-[5.5rem] mb-6">
-                  {item.price && (
+                  {item?.price && (
                     <>
                       <div className="h3">$</div>
                       <div className="text-[5.5rem] leading-none font-bold">
-                        {item.price}
+                        {item?.price}
                       </div>
                     </>
                   )}
@@ -251,11 +266,7 @@ function Purchase() {
                     </button>
                   ))}
                 </div>
-                {/* <div className="df ac jc text-gray-300 fs20 py-3 text-center font-sans">
-                  {item.id === "1"
-                    ? minQ * 50 + " rolls per pack"
-                    : maxQ * 10 + " rolls per day"}
-                </div> */}
+
                 <button
                   className="w-full my-6 py-3 bg-purple-800 rounded-md font-semibold font-sans"
                   onClick={() => {
@@ -263,7 +274,7 @@ function Purchase() {
                       item.id === "1"
                         ? ((minQ * item?.price) / bnbPrice).toFixed(5)
                         : ((maxQ * item?.price) / bnbPrice).toFixed(5);
-                    console.log({ bnbVal });
+                    // console.log({ bnbVal });
                     const usdVal =
                       item.id === "1"
                         ? (minQ * item?.price).toFixed(2)
@@ -271,13 +282,19 @@ function Purchase() {
                     handlePurchase(bnbVal, usdVal, item.id);
                   }}
                 >
-                  {minQ === 0 && maxQ === 0 ? 
-                    "Pay" : 
-                    item.id === "1" ?
-                      (minQ === 0 ? "Pay" : `Pay ${(minQ * item.price / bnbPrice).toFixed(5)} BNB (${(minQ * item.price).toFixed(2)} USDT)`) :
-                      (maxQ === 0 ? "Pay" : `Pay ${(maxQ * item.price / bnbPrice).toFixed(5)} BNB (${(maxQ * item.price).toFixed(2)} USDT)`)
-                  }
-
+                  {minQ === 0 && maxQ === 0
+                    ? "Pay"
+                    : item.id === "1"
+                    ? minQ === 0
+                      ? "Pay"
+                      : `Pay ${((minQ * item?.price) / bnbPrice).toFixed(
+                          5
+                        )} BNB (${(minQ * item?.price).toFixed(2)} USDT)`
+                    : maxQ === 0
+                    ? "Pay"
+                    : `Pay ${((maxQ * item?.price) / bnbPrice).toFixed(
+                        5
+                      )} BNB (${(maxQ * item?.price).toFixed(2)} USDT)`}
                 </button>
               </div>
             ))}

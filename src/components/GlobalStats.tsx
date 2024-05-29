@@ -12,7 +12,7 @@ import InviteSection from './InviteSection';
 function GlobalStats() {
   const isUserLoggedIn = useSelector((state: RootState) => state.auth.isUserLoggedIn);
   const user = useSelector((state: RootState) => state.auth.user);
-  const globalData = useSelector((state: RootState) => state.globalData.globalData);
+  const globalData:any = useSelector((state: RootState) => state.globalData.globalData);
   console.log({user})
 
   const baseUrl = config.baseUrl; 
@@ -95,7 +95,6 @@ function GlobalStats() {
         refUrl={refUrl}
         copyToClipboard={copyToClipboard}
         shareOnWhatsApp={shareOnWhatsApp}
-        handleLogout={handleLogout}
       />
         </div>
   )

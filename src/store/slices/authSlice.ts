@@ -82,7 +82,7 @@
 // export default authSlice.reducer;
 
 
-
+"use client"
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define a type for the user object

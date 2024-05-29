@@ -1,8 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faSignOutAlt, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 
-function InviteSection({ refUrl, copyToClipboard, shareOnWhatsApp, handleLogout }) {
+function InviteSection({ refUrl , copyToClipboard, shareOnWhatsApp }) {
   return (
     <div className="invite-section text-center">
       <h2>Invite Section</h2>

@@ -58,10 +58,9 @@ export default function AuthPage() {
         // Convert both chain IDs to decimal or hexadecimal as needed before comparison
         const currentChainId = BigInt(network.chainId); // This should already be in decimal form
         const expectedChainId = BigInt(
-          isDev ? BSC_TESTNET.chainId : BSC_MAINNET.chainId,
-          16
+          isDev ? BSC_TESTNET.chainId : BSC_MAINNET.chainId 
         ); // Convert from hex string to decimal
-        console.log(currentChainId, expectedChainId);
+        // console.log(currentChainId, expectedChainId);
 
         if (currentChainId !== expectedChainId) {
           console.log("Please switch to the correct network");
@@ -103,8 +102,9 @@ export default function AuthPage() {
           }
         }
       } catch (error) {
+        const e = error as { code?: string }; // Assuming error will always have a 'code' or be undefined
         // console.log({errorCode: error.code});
-        if (error.code === "ACTION_REJECTED") {
+        if (e.code === "ACTION_REJECTED") {
           // User rejected the request
           toast.error("Login request was rejected.");
         } else {

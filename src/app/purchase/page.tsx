@@ -31,9 +31,9 @@ function Purchase() {
   let user;
   let token;
   useEffect(() => {
-    isUserLoggedIn = useSelector(
-      (state: RootState) => state.auth.isUserLoggedIn
-    );
+      isUserLoggedIn = useSelector(
+        (state: RootState) => state.auth.isUserLoggedIn
+      );
       user = useSelector((state: RootState) => state.auth.user);
       token = useSelector((state: RootState) => state.auth.token);
      if (!isUserLoggedIn || !user) {
@@ -100,13 +100,16 @@ function Purchase() {
     };
     const packPurchasesUrl = `${config.apiBaseUrl}/packPurchases`;
     const depositRequestsUrl = `${config.apiBaseUrl}/deposits`;
-    if (!window.ethereum) {
-      toast.error("Please install / use web3 supported platform to proceed.");
-      return;
-    }
+    // if (!window.ethereum) {
+    //   toast.error("Please install / use web3 supported platform to proceed.");
+    //   return;
+    // }
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      let provider;
+      if(typeof window !== 'undefined'){
+        provider = new ethers.BrowserProvider(window.ethereum);
+      }
       await provider.send("eth_requestAccounts", []); // Request account access
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
